@@ -1,0 +1,14 @@
+/**
+ * WebSocket payload formats of e-Heart server interface
+ *
+ * Message formats are defined in separated files
+ * for [request](eheart/server/proto/request.proto)
+ * and [response](eheart/server/proto/response.proto).
+ */
+syntax = "proto3";
+
+package eheart;
+
+import public "eheart/server/proto/util.proto";
+import public "eheart/server/proto/request.proto";
+import public "eheart/server/proto/response.proto";

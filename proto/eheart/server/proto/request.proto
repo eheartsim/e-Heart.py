@@ -1,0 +1,107 @@
+/**
+ * Formats for request messages
+ *
+ * All request message are in [Request](Request) message format.
+ */
+syntax = "proto3";
+
+import "google/protobuf/any.proto";
+
+import "eheart/server/proto/util.proto";
+
+package eheart;
+
+/**
+ * Requests for e-Heart server
+ */
+message Request {
+    // Command
+    Command command = 1;
+    // Parameter encoded from the parameter message corresponding to the command
+    google.protobuf.Any parameter = 2;
+}
+
+/** Commands */
+enum Command {
+    UNDEFINED = 0;          // DO NOT USE
+    INIT = 1;               // Initialize an engine with a model
+    SET_DIFFVAR_VAL = 2;    // Set the values of the differential variables
+    GET_DIFFVAR_NAME = 3;   // Get the names of the differential variables
+    GET_CURRENT_VAL = 4;    // Get the current values of time and the differential variables
+    SET_WATCHING_VAR = 5;   // Set watching variables, which values are returned for SOLVE_IVP command
+    SOLVE_IVP = 6;          // Solve an initial value problem and return a series of solution values.
+    CHANGE_TIME = 7;        // Change the value of time
+    SET_MODEL_CONST = 8;    // Set the values of model constants
+    EVAL_MODEL_VAR = 9;     // Evaluate model variables
+    CALL_MODEL_METHOD = 10; // Call a method of the model class
+}
+
+/** INIT command parameters */
+message InitParam {
+    // Fully quarified model class name
+    string model = 1;
+    // Initial time
+    double t = 2;
+    // Options at Engine instantiation
+    map<string, double> options = 3;
+}
+
+/** SET_DIFFVAR_VAL command parameter */
+message SetDiffvarValParam {
+    // Map of differential variable names and values
+    map<string, double> valmap = 1;
+}
+
+/** GET_DIFFVAR_NAME command parameter */
+message GetDiffvarNameParam {
+}
+
+/** GET_CURRENT_VAL command parameter */
+message GetCurrentValParam {
+}
+
+/** SET_WATCHING_VAR command parameter */
+message SetWatchingVarParam {
+    // Names of watching variables
+    repeated string vars = 1;
+}
+
+/** SOLVE_IVP command parameters */
+message SolveIVPParam {
+    // Next time
+    double tn = 1;
+    // Interval of solution output
+    double output_interval = 2;
+}
+
+/** CHANGE_TIME command parameters */
+message ChangeTimeParam {
+    // Time to be set
+    double t = 1;
+    // Options for Engine.restart
+    map<string, double> options = 2;
+}
+
+/** SET_MODEL_CONST command parameter */
+message SetModelConstParam {
+    // Map of constant names and values
+    map<string, double> valmap = 1;
+}
+
+/** EVAL_MODEL_VAR command parameters */
+message EvalModelVarParam {
+    // Variable names to be evaluated
+    repeated string vars = 1;
+    // Time to be evaluated (required)
+    double t = 2;
+    // Differential variable values used in evaluation
+    repeated double y = 3;
+}
+
+/** CALL_MODEL_METHOD command parameters */
+message CallModelMethodParam {
+    // Method name
+    string method_name = 1;
+    // Arguments
+    map<string, GenericScalarOrArray> args = 2;
+}

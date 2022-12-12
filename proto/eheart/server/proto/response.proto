@@ -1,0 +1,62 @@
+/**
+ * Formats for response messages
+ *
+ * Response message formats depend on request commands.
+ */
+syntax = "proto3";
+
+import "eheart/server/proto/util.proto";
+
+package eheart;
+
+/** Status response for all the commands in errors and 
+    for SET_DIFFVAR_VAL, SET_WATCHING_VAR, CHANGE_TIME,
+    and SET_MODEL_CONST commands*/
+message StatusResponse {
+    // Status
+    bool success = 1;
+    // Error message
+    string message = 2;
+}
+
+/** Response for GET_DIFFVAR_NAME Command */
+message DiffvarNameResponse {
+    // Variable names
+    repeated string names = 1;
+}
+
+/** Response for GET_CURRENT_VAL Command */
+message CurrentValResponse {
+    // Current time
+    double t = 1;
+    // Values of the differential variables
+    repeated double y = 2;
+}
+
+/** Response of IVP Solution for SOLVE_IVP Command */
+message SolutionResponse {
+    // Time
+    ValueSeries t = 1;
+    // Differential variable values
+    repeated ValueSeries diffvars = 2;
+    // Watching variable values
+    repeated ValueSeries watching_vars = 3;
+}
+
+/** Series of values */
+message ValueSeries {
+    // Values in a series
+    repeated double values = 1;
+}
+
+/** Response of variable values for EVAL_MODEL_VAR Command */
+message ValueArrayResponse {
+    // Array of values
+    repeated double values = 1;
+}
+
+/** Response for CALL_MODEL_METHOD Command */
+message MethodReturnResponse {
+    // Method return value(s)
+    repeated GenericScalarOrArray return_value = 1;
+}

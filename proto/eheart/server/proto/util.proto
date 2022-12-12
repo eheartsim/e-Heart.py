@@ -1,0 +1,23 @@
+/**
+ * Utility types
+ */
+syntax = "proto3";
+
+package eheart;
+
+/** Generic format for method arguments and return value */
+message GenericScalarOrArray {
+    // Whether the value is a scalar
+    bool isscalar = 1;
+    // Value(s)
+    repeated GenericValue value = 2;
+}
+
+/** Generic value format */
+message GenericValue {
+    oneof value {
+        float real = 1;
+        int64 integer = 2;
+        string string = 3;
+    }
+}

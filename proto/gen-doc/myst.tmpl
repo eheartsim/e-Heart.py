@@ -1,0 +1,76 @@
+# Protocol Buffers message format
+
+{{range .Files}}
+{{$file_name := .Name}}
+
+({{.Name}})=
+## {{.Name}}
+{{.Description}}
+
+{{- range .Enums}}
+
+({{.LongName}})=
+### enum {{.LongName}}
+{{.Description}}
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+{{range .Values -}}
+  | {{.Name}} | {{.Number}} | {{nobr .Description}} |
+{{end}}
+
+{{end -}}{{/* end enums */}}
+
+{{- range .Messages}}
+
+({{urlquery .LongName}})=
+### message {{.LongName}}
+{{- with .Description}}
+{{.}}
+{{end -}}
+
+{{- if .HasFields}}
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+{{range .Fields -}}
+  | {{.Name}} | [{{.LongType}}]({{urlquery .LongType}}) | {{.Label}} | {{if (index .Options "deprecated"|default false)}}**Deprecated.** {{end}}{{nobr .Description}}{{if .DefaultValue}} Default: {{.DefaultValue}}{{end}} |
+{{end}}
+{{end -}}
+
+{{- if .HasExtensions}}
+
+| Extension | Type | Base | Number | Description |
+| --------- | ---- | ---- | ------ | ----------- |
+{{range .Extensions -}}
+  | {{.Name}} | {{.LongType}} | {{.ContainingLongType}} | {{.Number}} | {{nobr .Description}}{{if .DefaultValue}} Default: {{.DefaultValue}}{{end}} |
+{{end}}
+
+{{end -}}
+
+{{end -}}{{/* end messages */}}
+
+{{- if .HasExtensions}}
+
+### File-level Extensions
+| Extension | Type | Base | Number | Description |
+| --------- | ---- | ---- | ------ | ----------- |
+{{range .Extensions -}}
+  | {{.Name}} | {{.LongType}} | {{.ContainingLongType}} | {{.Number}} | {{nobr .Description}}{{if .DefaultValue}} Default: `{{.DefaultValue}}`{{end}} |
+{{end}}
+
+{{end -}}{{/* end HasExtensions */}}
+
+{{- range .Services}}
+
+### {{.Name}}
+{{.Description}}
+
+| Method Name | Request Type | Response Type | Description |
+| ----------- | ------------ | ------------- | ------------|
+{{range .Methods -}}
+  | {{.Name}} | [{{.RequestLongType}}]({{.RequestFullType}}){{if .RequestStreaming}} stream{{end}} | [{{.ResponseLongType}}](#{{.ResponseFullType | anchor}}){{if .ResponseStreaming}} stream{{end}} | {{nobr .Description}} |
+{{end}}
+
+{{end -}}{{/* end services */}}
+
+{{end -}}
