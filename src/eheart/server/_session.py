@@ -150,9 +150,10 @@ class Session:
                 self.engine.restart()
                 self.restart_needed = False
             tprev = self.engine.t
+            tn = parameter.tn
             tstep = parameter.output_interval
-            sol = self.engine.solve_ivp(parameter.tn)
-            tout = np.arange(tprev, parameter.tn + tstep, tstep)
+            sol = self.engine.solve_ivp(tn)
+            tout = tprev + np.arange(0, (tn - tprev) / tstep + 1) * tstep
             y = sol(tout)
             if self.watching:
                 watching = self.engine.eval(
